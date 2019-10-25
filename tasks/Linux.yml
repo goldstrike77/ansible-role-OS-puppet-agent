@@ -56,7 +56,7 @@
     - name: Installation the Puppet agent.
       include: '{{ ansible_system }}/install.yml'
       when:
-        - inventory_node_status.json.connected is defined
+        - inventory_node_status.json.connected is not defined
         - not inventory_node_status.json.connected | bool
   when:
     - check_puppet_api.msg is not defined
