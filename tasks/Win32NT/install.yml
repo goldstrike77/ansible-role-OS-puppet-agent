@@ -1,0 +1,20 @@
+---
+- name: Download the puppet agent installation script.
+  win_get_url:
+    url: 'https://{{ puppet_compile }}:8140/packages/current/install.ps1'
+    dest: '{{ puppet_win_tmp_path }}\puppet_agent_install.ps1'
+    validate_certs: 'no'
+  environment:
+    no_proxy: '{{ puppet_compile }}'
+
+- name: Install agent with PE package management.
+  win_shell: '{{ puppet_win_tmp_path }}\puppet_agent_install.ps1'
+  args:
+    warn: 'no'
+  environment:
+    no_proxy: '{{ puppet_compile }}'
+
+- name: Remove the puppet agent installation script.
+  win_file:
+    path: '{{ puppet_win_tmp_path }}\puppet_agent_install.ps1'
+    state: 'absent'

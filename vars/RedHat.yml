@@ -1,1 +1,2 @@
 ---
+puppet_linux_tmp_path: '/tmp'

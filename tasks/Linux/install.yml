@@ -2,7 +2,7 @@
 - name: Download the puppet agent installation script.
   get_url:
     url: 'https://{{ puppet_compile }}:8140/packages/current/install.bash'
-    dest: '/tmp/puppet_agent_install.bash'
+    dest: '{{ puppet_linux_tmp_path }}/puppet_agent_install.bash'
     owner: 'root'
     group: 'root'
     mode: '0644'
@@ -10,8 +10,8 @@
   environment:
     no_proxy: '{{ puppet_compile }}'
 
-- name: Install linux agent with PE package management.
-  shell: 'bash /tmp/puppet_agent_install.bash'
+- name: Install agent with PE package management.
+  shell: 'bash {{ puppet_linux_tmp_path }}/puppet_agent_install.bash'
   args:
     warn: 'no'
   environment:
@@ -19,5 +19,5 @@
 
 - name: Remove the puppet agent installation script.
   file:
-    path: '/tmp/puppet_agent_install.bash'
+    path: '{{ puppet_linux_tmp_path }}/puppet_agent_install.bash'
     state: 'absent'

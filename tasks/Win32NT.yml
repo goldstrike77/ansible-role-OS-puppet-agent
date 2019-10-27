@@ -3,7 +3,7 @@
   include_vars: '{{ ansible_os_family }}.yml'
 
 - name: Check Puppet master API are accessible from current host.
-  wait_for:
+  win_wait_for:
     host: '{{ puppet_master }}'
     port: '{{ puppet_port.API }}'
     state: 'started'
@@ -16,41 +16,44 @@
 - name: Puppet agent operation.
   block:
     - name: Generate Puppet access token using the API endpoint.
-      uri:
+      win_uri:
         url: 'https://{{ puppet_master }}:{{ puppet_port.API }}/rbac-api/v1/auth/token'
         method: 'POST'
+        return_content: 'yes'
         force_basic_auth: 'yes'
         status_code: '200'
         body: '{"login": "{{ puppet_admin_user }}", "password": "{{ puppet_admin_pass }}", "lifetime": "10m"}'
-        body_format: 'json'
         validate_certs: 'no'
         headers:
-          X-Requested-By: '{{ ansible_default_ipv4.address }}'
+          Content-Type: 'application/json'
+          X-Requested-By: '{{ ansible_ip_addresses[0] }}'
           cache-control: 'no-cache'
       environment:
         no_proxy: '{{ puppet_master }}'
       register: token_status
-      until: token_status.status == 200
+      until: token_status.status_code == 200
       retries: 3
       delay: 3
       no_log: true
     - name: Check the node is connected to the PCP broker already.
-      uri:
+      win_uri:
         url: 'https://{{ puppet_master }}:8143/orchestrator/v1/inventory/{{ ansible_fqdn | lower }}'
+        return_content: 'yes'
         method: 'GET'
         status_code: '200'
         validate_certs: 'no'
         headers:
-          X-Requested-By: '{{ ansible_default_ipv4.address }}'
+          X-Requested-By: '{{ ansible_ip_addresses[0] }}'
           X-Authentication: '{{ token_status.json.token }}'
           cache-control: 'no-cache'
       environment:
         no_proxy: '{{ puppet_master }}'
       register: inventory_node_status
-      until: inventory_node_status.status == 200
+      until: inventory_node_status.status_code == 200
       retries: 3
       delay: 3
       changed_when: false
       failed_when: false
       no_log: true
-  when: check_puppet_api.msg is not defined
+  when:
+    - check_puppet_api.msg is not defined
