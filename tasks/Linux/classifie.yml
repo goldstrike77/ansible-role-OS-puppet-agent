@@ -9,7 +9,7 @@
     url: 'https://{{ puppet_master }}:{{ puppet_port.API }}/classifier-api/v1/groups'
     method: 'POST'
     force_basic_auth: 'yes'
-    body: {"name": "{{ puppet_node_group }}", "environment": "{{ puppet_node_env }}","parent": "{{ puppet_root_group_id }}", "classes": {}}
+    body: {"name": "{{ puppet_node_group }}", "environment": "{{ puppet_node_env }}","parent": "{% if ansible_hostname.split('-')[1] == 'prd' %}{{ puppet_environment_groups.production }}{% else %}{{ puppet_environment_groups.development }}{% endif %}", "classes": {}}
     body_format: 'json'
     validate_certs: 'no'
     headers:
@@ -50,18 +50,16 @@
   set_fact:
     puppet_node_group_id: '{{ inventory_group_status | json_query(query) }}'
   vars:
-    query: 'json[*].children[?name=="{{ puppet_node_group }}"].id'
-
-- debug:
-    var: puppet_node_group_id
+    query: "json[*].children[?name=='{{ puppet_node_group }}'].id"
 
 - name: Pin puppet node to the group.
   uri:
-    url: 'https://{{ puppet_master }}:{{ puppet_port.API }}/classifier-api/v1/groups/{{ puppet_node_group_id }}/pin'
+    url: 'https://{{ puppet_master }}:{{ puppet_port.API }}/classifier-api/v1/groups/{{ item }}/pin'
     method: 'POST'
     force_basic_auth: 'yes'
     body: '{"nodes": ["{{ ansible_fqdn }}"]}'
     body_format: 'json'
+    status_code: '204'
     validate_certs: 'no'
     headers:
       X-Authentication: '{{ token_status.json.token }}'
@@ -71,8 +69,9 @@
     no_proxy: '{{ puppet_master }}'
   register: node_pin_status
   until: node_pin_status.status == 204
+  loop: '{{ puppet_node_group_id[0] }}'
   retries: 3
   delay: 3
-#  changed_when: false
-#  failed_when: false
-#  no_log: true
+  changed_when: false
+  failed_when: false
+  no_log: true

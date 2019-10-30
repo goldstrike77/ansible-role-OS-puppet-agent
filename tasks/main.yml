@@ -12,6 +12,6 @@
 - name: Puppet agent classification.
   include: '{{ ansible_system }}/classifie.yml'
   when:
-#    - inventory_node_status is defined
-#    - not inventory_node_status.json.connected | bool
-#    - check_puppet_api.msg is not defined
+    - inventory_node_status is defined
+    - not inventory_node_status.json.connected | bool
+    - check_puppet_api.msg is not defined

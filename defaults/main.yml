@@ -4,7 +4,6 @@ puppet_master: 'master.example.com'
 puppet_compile: 'master.example.com'
 puppet_admin_user: 'admin'
 puppet_admin_pass: 'changeme'
-puppet_root_group_id: '00000000-0000-4000-8000-000000000000'
 
 # Listen port #
 puppet_port: # Puppet server listen, don't modify it.
@@ -26,4 +25,3 @@ node_region:
   - 'cne2'
   - 'cnn'
   - 'cnn2'
-
