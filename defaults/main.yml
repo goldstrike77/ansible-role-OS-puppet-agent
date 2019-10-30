@@ -4,6 +4,7 @@ puppet_master: 'master.example.com'
 puppet_compile: 'master.example.com'
 puppet_admin_user: 'admin'
 puppet_admin_pass: 'changeme'
+puppet_root_group_id: '00000000-0000-4000-8000-000000000000'
 
 # Listen port #
 puppet_port: # Puppet server listen, don't modify it.
@@ -16,6 +17,13 @@ puppet_port: # Puppet server listen, don't modify it.
   PostgreSQL: '5432' # PostgreSQL data between the master and replica.
   Razor: '8150-8151' # Node classified as a Razor server.
 
-# Classification #
-puppet_environment: 'Development' # Define the classifie environment.
-puppet_group: 'Development' # Define the node main classifie group.
+puppet_environment_groups:
+  development: '77e9c42e-494f-4251-bffb-d1e5110a1a19'
+  production: '303be3b8-4602-4d96-a51f-c4adba5f4e55'
+
+node_region:
+  - 'cne'
+  - 'cne2'
+  - 'cnn'
+  - 'cnn2'
+
