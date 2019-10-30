@@ -15,3 +15,7 @@ puppet_port: # Puppet server listen, don't modify it.
   CodeManager: '8170' # Deploy environments, run webhooks, and make API calls.
   PostgreSQL: '5432' # PostgreSQL data between the master and replica.
   Razor: '8150-8151' # Node classified as a Razor server.
+
+# Classification #
+puppet_environment: 'Development' # Define the classifie environment.
+puppet_group: 'Development' # Define the node main classifie group.
