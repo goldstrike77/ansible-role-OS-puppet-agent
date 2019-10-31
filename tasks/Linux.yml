@@ -36,7 +36,7 @@
       no_log: true
     - name: Check the node is connected to the PCP broker already.
       uri:
-        url: 'https://{{ puppet_master }}:8143/orchestrator/v1/inventory/{{ ansible_fqdn | lower }}'
+        url: 'https://{{ puppet_master }}:{{ puppet_port.Orchestrator8143 }}/orchestrator/v1/inventory/{{ ansible_fqdn | lower }}'
         method: 'GET'
         status_code: '200'
         validate_certs: 'no'

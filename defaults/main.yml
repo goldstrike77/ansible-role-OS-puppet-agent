@@ -2,7 +2,7 @@
 # General parameters #
 puppet_master: 'master.example.com'
 puppet_compile: 'master.example.com'
-puppet_admin_user: 'admin'
+puppet_admin_user: 'oper' # User roles as operators
 puppet_admin_pass: 'changeme'
 
 # Listen port #
@@ -11,7 +11,8 @@ puppet_port: # Puppet server listen, don't modify it.
   Console: '443' # Accept HTTPS traffic from end users.
   API: '4433' # Classifier / console services API endpoint.
   PuppetDB: '8081' # Accepts PuppetDB traffic/requests.
-  Orchestrator: '8142-8143' # Accept connections from Puppet Communications Protocol brokers to relay communications.
+  Orchestrator8142: '8142' # accept inbound traffic/responses from agents via the Puppet Execution Protocol agent.
+  Orchestrator8143: '8143' # Accept connections from Puppet Communications Protocol brokers to relay communications.
   CodeManager: '8170' # Deploy environments, run webhooks, and make API calls.
   PostgreSQL: '5432' # PostgreSQL data between the master and replica.
   Razor: '8150-8151' # Node classified as a Razor server.
