@@ -2,7 +2,7 @@
 - name: Set puppet node group variables.
   set_fact:
     puppet_node_group: "{% if ansible_hostname.split('-')[2].lower() in node_region | lower %}{{ ansible_hostname.split('-')[3] }}{% else %}{{ ansible_hostname.split('-')[2] }}{% endif %}"
-    puppet_node_env: "{% if ansible_hostname.split('-')[1] == 'prd' %}production{% else %}development{% endif %}"
+    puppet_node_env: "{% if ansible_hostname.split('-')[1].lower() == 'prd' %}production{% else %}development{% endif %}"
 
 - name: Create a puppet node project group.
   uri:
