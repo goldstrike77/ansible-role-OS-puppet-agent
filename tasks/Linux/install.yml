@@ -1,7 +1,7 @@
 ---
 - name: Download the puppet agent installation script.
   get_url:
-    url: 'https://{{ puppet_compile }}:8140/packages/current/install.bash'
+    url: 'https://{{ puppet_compile }}:{{ puppet_port.Master }}/packages/current/install.bash'
     dest: '{{ puppet_linux_tmp_path }}/puppet_agent_install.bash'
     owner: 'root'
     group: 'root'
